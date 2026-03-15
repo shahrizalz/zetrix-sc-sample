@@ -1,0 +1,13 @@
+# Dependencies
+node_modules/
+
+# Environment variables
+.env
+
+# Generated contract build artifacts
+generated/*
+!generated/.gitkeep
+
+# Test coverage
+.nyc_output/
+coverage/
