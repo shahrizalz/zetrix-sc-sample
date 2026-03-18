@@ -300,5 +300,170 @@ const Utils = {
      * @readonly
      */
     hexToDec: (strHex) => {
+    },
+
+    // ── int64 bitwise ─────────────────────────────────────────────────────────
+
+    /**
+     * Bitwise AND on two signed 64-bit integers.
+     * @param {string|number} a - Left operand.
+     * @param {string|number} b - Right operand.
+     * @returns {string} Result of a & b.
+     */
+    int64And: (a, b) => {
+    },
+
+    /**
+     * Bitwise OR on two signed 64-bit integers.
+     * @param {string|number} a - Left operand.
+     * @param {string|number} b - Right operand.
+     * @returns {string} Result of a | b.
+     */
+    int64Or: (a, b) => {
+    },
+
+    /**
+     * Bitwise XOR on two signed 64-bit integers.
+     * @param {string|number} a - Left operand.
+     * @param {string|number} b - Right operand.
+     * @returns {string} Result of a ^ b.
+     */
+    int64Xor: (a, b) => {
+    },
+
+    /**
+     * Bitwise NOT on a signed 64-bit integer.
+     * @param {string|number} a - Operand.
+     * @returns {string} Result of ~a.
+     */
+    int64Not: (a) => {
+    },
+
+    /**
+     * Left shift on a signed 64-bit integer (<<).
+     * @param {string|number} a - Value to shift.
+     * @param {string|number} b - Shift amount.
+     * @returns {string} Result of a << b.
+     */
+    int64LShift: (a, b) => {
+    },
+
+    /**
+     * Arithmetic right shift on a signed 64-bit integer (>>).
+     * @param {string|number} a - Value to shift.
+     * @param {string|number} b - Shift amount.
+     * @returns {string} Result of a >> b.
+     */
+    int64RShift: (a, b) => {
+    },
+
+    /**
+     * Logical (unsigned) right shift on a 64-bit value (>>>).
+     * @param {string|number} a - Value to shift.
+     * @param {string|number} b - Shift amount.
+     * @returns {string} Result of a >>> b.
+     */
+    uint64RShift: (a, b) => {
+    },
+
+    // ── int256 bitwise ────────────────────────────────────────────────────────
+
+    /**
+     * Bitwise AND on two signed 256-bit integers.
+     * @param {string|number} a - Left operand.
+     * @param {string|number} b - Right operand.
+     * @returns {string} Result of a & b.
+     */
+    int256And: (a, b) => {
+    },
+
+    /**
+     * Bitwise OR on two signed 256-bit integers.
+     * @param {string|number} a - Left operand.
+     * @param {string|number} b - Right operand.
+     * @returns {string} Result of a | b.
+     */
+    int256Or: (a, b) => {
+    },
+
+    /**
+     * Bitwise XOR on two signed 256-bit integers.
+     * @param {string|number} a - Left operand.
+     * @param {string|number} b - Right operand.
+     * @returns {string} Result of a ^ b.
+     */
+    int256Xor: (a, b) => {
+    },
+
+    /**
+     * Bitwise NOT on a signed 256-bit integer.
+     * @param {string|number} a - Operand.
+     * @returns {string} Result of ~a.
+     */
+    int256Not: (a) => {
+    },
+
+    /**
+     * Left shift on a signed 256-bit integer (<<).
+     * @param {string|number} a - Value to shift.
+     * @param {string|number} b - Shift amount.
+     * @returns {string} Result of a << b.
+     */
+    int256LShift: (a, b) => {
+    },
+
+    /**
+     * Arithmetic right shift on a signed 256-bit integer (>>).
+     * @param {string|number} a - Value to shift.
+     * @param {string|number} b - Shift amount.
+     * @returns {string} Result of a >> b.
+     */
+    int256RShift: (a, b) => {
+    },
+
+    /**
+     * Logical (unsigned) right shift on a 256-bit value (>>>).
+     * @param {string|number} a - Value to shift.
+     * @param {string|number} b - Shift amount.
+     * @returns {string} Result of a >>> b.
+     */
+    uint256RShift: (a, b) => {
+    },
+
+    // ── GMP math ──────────────────────────────────────────────────────────────
+
+    /**
+     * 256-bit exponentiation.
+     * @param {string|number} base - Base value.
+     * @param {string|number} exp - Exponent value.
+     * @returns {string} Result of base ^ exp.
+     */
+    int256Pow: (base, exp) => {
+    },
+
+    /**
+     * 256-bit integer square root.
+     * @param {string|number} x - Input value.
+     * @returns {string} Floor of the square root of x.
+     */
+    int256Sqrt: (x) => {
+    },
+
+    /**
+     * Return the smaller of two 256-bit integers.
+     * @param {string|number} x - First value.
+     * @param {string|number} y - Second value.
+     * @returns {string} The minimum of x and y.
+     */
+    int256Min: (x, y) => {
+    },
+
+    /**
+     * Return the larger of two 256-bit integers.
+     * @param {string|number} x - First value.
+     * @param {string|number} y - Second value.
+     * @returns {string} The maximum of x and y.
+     */
+    int256Max: (x, y) => {
     }
 }

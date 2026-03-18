@@ -3,6 +3,8 @@
     "help": "node help.js",
     "test": "node ./node_modules/mocha/bin/mocha -r dotenv/config",
     "test-coverage": "nyc --reporter=html --reporter=text node ./node_modules/mocha/bin/mocha -r dotenv/config",
+    "deploy:bitwise-op": "node ./scripts/deploy-bitwise-op-spec.js",
+    "deploy:math-gmp": "node ./scripts/deploy-math-gmp-spec.js",
     "deploy:math": "node ./scripts/deploy-math-spec.js",
     "deploy:bytes": "node ./scripts/deploy-bytes-spec.js",
     "deploy:logic-op": "node ./scripts/deploy-logic-op-spec.js",

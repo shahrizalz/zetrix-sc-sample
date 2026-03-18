@@ -390,7 +390,42 @@ const Utils = {
         } catch (e) {
             return false;
         }
-    }
+    },
+
+    // ── GMP math ──────────────────────────────────────────────────────────────
+
+    int256Pow: (base, exp) => (BigInt(base) ** BigInt(exp)).toString(),
+    int256Sqrt: (x) => {
+        let n = BigInt(x);
+        if (n < 0n) throw new Error('int256Sqrt: negative input');
+        if (n === 0n) return '0';
+        let z = n;
+        let y = (n / 2n) + 1n;
+        while (y < z) { z = y; y = (n / y + y) / 2n; }
+        return z.toString();
+    },
+    int256Min: (x, y) => (BigInt(x) < BigInt(y) ? BigInt(x) : BigInt(y)).toString(),
+    int256Max: (x, y) => (BigInt(x) > BigInt(y) ? BigInt(x) : BigInt(y)).toString(),
+
+    // ── int64 bitwise ─────────────────────────────────────────────────────────
+
+    int64And: (a, b) => (BigInt.asIntN(64, BigInt(a)) & BigInt.asIntN(64, BigInt(b))).toString(),
+    int64Or:  (a, b) => (BigInt.asIntN(64, BigInt(a)) | BigInt.asIntN(64, BigInt(b))).toString(),
+    int64Xor: (a, b) => (BigInt.asIntN(64, BigInt(a)) ^ BigInt.asIntN(64, BigInt(b))).toString(),
+    int64Not: (a)    => BigInt.asIntN(64, ~BigInt(a)).toString(),
+    int64LShift:  (a, b) => BigInt.asIntN(64, BigInt(a) << BigInt(b)).toString(),
+    int64RShift:  (a, b) => (BigInt.asIntN(64, BigInt(a)) >> BigInt(b)).toString(),
+    uint64RShift: (a, b) => (BigInt.asUintN(64, BigInt(a)) >> BigInt(b)).toString(),
+
+    // ── int256 bitwise ────────────────────────────────────────────────────────
+
+    int256And: (a, b) => (BigInt.asIntN(256, BigInt(a)) & BigInt.asIntN(256, BigInt(b))).toString(),
+    int256Or:  (a, b) => (BigInt.asIntN(256, BigInt(a)) | BigInt.asIntN(256, BigInt(b))).toString(),
+    int256Xor: (a, b) => (BigInt.asIntN(256, BigInt(a)) ^ BigInt.asIntN(256, BigInt(b))).toString(),
+    int256Not: (a)    => BigInt.asIntN(256, ~BigInt(a)).toString(),
+    int256LShift:  (a, b) => BigInt.asIntN(256, BigInt(a) << BigInt(b)).toString(),
+    int256RShift:  (a, b) => (BigInt.asIntN(256, BigInt(a)) >> BigInt(b)).toString(),
+    uint256RShift: (a, b) => (BigInt.asUintN(256, BigInt(a)) >> BigInt(b)).toString()
 }
 
 module.exports = Utils;
