@@ -111,6 +111,7 @@ npm run deploy:ztp1155 uri       # Multi-token with URI storage
 npm run deploy:math              # Deploy math library
 npm run deploy:bytes             # Deploy bytes library
 npm run deploy:logic-op          # Deploy logic operations
+npm run deploy:ec                # Deploy elliptic curve (BLS12-381) spec
 ```
 
 ### Contract Upgrade
@@ -417,6 +418,16 @@ Utils.int256Compare(x, y)    // 256-bit comparison
 Utils.sha256(data)           // SHA-256 hashing
 Utils.toBaseUnit(value)      // Convert to base unit
 Utils.addressCheck(address)  // Validate address
+```
+
+### Elliptic Curve Functions (BLS12-381)
+
+```javascript
+Utils.ecAdd(p1, p2)          // Add two G1 points; args/result are 96-byte uncompressed points, hex-encoded
+Utils.ecMul(p, scalar)       // Scalar multiply a G1 point; scalar is a big-endian hex integer
+Utils.ecInv(p)               // Negate (additive inverse) a G1 point
+Utils.ecDouble(p)            // Double a G1 point (2*P)
+Utils.ecPairing(p1, p2)      // Pairing e(P, Q): P ∈ G1 (96-byte), Q ∈ G2 (192-byte); returns GT element (576-byte, hex-encoded)
 ```
 
 For complete documentation, refer to the files in `contracts/internal/`.
