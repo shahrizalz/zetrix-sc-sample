@@ -364,6 +364,7 @@ const Utils = {
         return x > y ? 1 : x < y ? -1 : 0;
     },
     stoui64Check: (s) => {
+        if (typeof s !== 'string' || s.trim() === '') return false;
         try {
             const n = BigInt(s);
             return n >= 0n && n <= 18446744073709551615n;
@@ -384,6 +385,7 @@ const Utils = {
         return x > y ? 1 : x < y ? -1 : 0;
     },
     stoui256Check: (s) => {
+        if (typeof s !== 'string' || s.trim() === '') return false;
         try {
             const n = BigInt(s);
             return n >= 0n && n <= ((1n << 256n) - 1n);
@@ -425,7 +427,17 @@ const Utils = {
     int256Not: (a)    => BigInt.asIntN(256, ~BigInt(a)).toString(),
     int256LShift:  (a, b) => BigInt.asIntN(256, BigInt(a) << BigInt(b)).toString(),
     int256RShift:  (a, b) => (BigInt.asIntN(256, BigInt(a)) >> BigInt(b)).toString(),
-    uint256RShift: (a, b) => (BigInt.asUintN(256, BigInt(a)) >> BigInt(b)).toString()
+    uint256RShift: (a, b) => (BigInt.asUintN(256, BigInt(a)) >> BigInt(b)).toString(),
+
+    // ── Elliptic Curve (BLS12-381) — mock implementations for unit testing ────
+    // These return deterministic sentinel strings so unit tests can verify routing
+    // without requiring a real BLS12-381 implementation.
+
+    ecAdd:     (p1, p2)    => 'ec_add_result',
+    ecMul:     (p, scalar) => 'ec_mul_result',
+    ecInv:     (p)         => 'ec_inv_result',
+    ecDouble:  (p)         => 'ec_double_result',
+    ecPairing: (p1, p2)    => 'ec_pairing_result',
 }
 
 module.exports = Utils;
