@@ -465,5 +465,50 @@ const Utils = {
      * @returns {string} The maximum of x and y.
      */
     int256Max: (x, y) => {
+    },
+
+    // ── Elliptic Curve (BLS12-381) ────────────────────────────────────────────
+
+    /**
+     * BLS12-381 G1 point addition.
+     * @param {string} p1 - Serialized G1 point (hex).
+     * @param {string} p2 - Serialized G1 point (hex).
+     * @returns {string} Serialized result G1 point (hex).
+     */
+    ecAdd: (p1, p2) => {
+    },
+
+    /**
+     * BLS12-381 G1 scalar multiplication.
+     * @param {string} p - Serialized G1 point (hex).
+     * @param {string} scalar - Fr scalar (hex).
+     * @returns {string} Serialized result G1 point (hex).
+     */
+    ecMul: (p, scalar) => {
+    },
+
+    /**
+     * BLS12-381 G1 point inverse (negation).
+     * @param {string} p - Serialized G1 point (hex).
+     * @returns {string} Serialized negated G1 point (hex).
+     */
+    ecInv: (p) => {
+    },
+
+    /**
+     * BLS12-381 G1 point doubling.
+     * @param {string} p - Serialized G1 point (hex).
+     * @returns {string} Serialized doubled G1 point (hex).
+     */
+    ecDouble: (p) => {
+    },
+
+    /**
+     * BLS12-381 pairing e(P, Q): G1 × G2 → GT.
+     * @param {string} p1 - Serialized G1 point (hex).
+     * @param {string} p2 - Serialized G2 point (hex).
+     * @returns {string} Serialized GT element (hex).
+     */
+    ecPairing: (p1, p2) => {
     }
 }
