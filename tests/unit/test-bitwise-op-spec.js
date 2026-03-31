@@ -94,6 +94,18 @@ describe('Test contract bitwise-op', function () {
         expect(JSON.parse(result).data).to.equal("-2");
     });
 
+    it('int64Not: ~INT64_MAX = INT64_MIN', async () => {
+        let input = {method: 'int64Not', params: {a: "9223372036854775807"}};
+        let result = query(JSON.stringify(input));
+        expect(JSON.parse(result).data).to.equal("-9223372036854775808");
+    });
+
+    it('int64Not: ~INT64_MIN = INT64_MAX', async () => {
+        let input = {method: 'int64Not', params: {a: "-9223372036854775808"}};
+        let result = query(JSON.stringify(input));
+        expect(JSON.parse(result).data).to.equal("9223372036854775807");
+    });
+
     // ── int64 LShift ──────────────────────────────────────────────────────────
 
     it('int64LShift: 1 << 4 = 16', async () => {
@@ -114,6 +126,19 @@ describe('Test contract bitwise-op', function () {
         expect(JSON.parse(result).data).to.equal("24");
     });
 
+    // BLK-C01: 1 << 63 wraps to INT64_MIN via unsigned shift
+    it('int64LShift: 1 << 63 = INT64_MIN (BLK-C01 unsigned-shift fix)', async () => {
+        let input = {method: 'int64LShift', params: {a: "1", b: "63"}};
+        let result = query(JSON.stringify(input));
+        expect(JSON.parse(result).data).to.equal("-9223372036854775808");
+    });
+
+    it('int64LShift: -1 << 1 = -2 (negative input)', async () => {
+        let input = {method: 'int64LShift', params: {a: "-1", b: "1"}};
+        let result = query(JSON.stringify(input));
+        expect(JSON.parse(result).data).to.equal("-2");
+    });
+
     // ── int64 RShift ──────────────────────────────────────────────────────────
 
     it('int64RShift: 64 >> 3 = 8', async () => {
@@ -132,6 +157,13 @@ describe('Test contract bitwise-op', function () {
         let input = {method: 'int64RShift', params: {a: "-8", b: "1"}};
         let result = query(JSON.stringify(input));
         expect(JSON.parse(result).data).to.equal("-4");
+    });
+
+    // BLK-M01: arithmetic right shift of -1 by max shift must stay -1 (sign-extending)
+    it('int64RShift: -1 >> 63 = -1 (BLK-M01 arithmetic shift)', async () => {
+        let input = {method: 'int64RShift', params: {a: "-1", b: "63"}};
+        let result = query(JSON.stringify(input));
+        expect(JSON.parse(result).data).to.equal("-1");
     });
 
     // ── uint64 RShift ─────────────────────────────────────────────────────────
@@ -210,6 +242,20 @@ describe('Test contract bitwise-op', function () {
         expect(JSON.parse(result).data).to.equal("-2");
     });
 
+    // ── int256 NOT ────────────────────────────────────────────────────────────
+
+    it('int256Not: ~INT256_MAX = INT256_MIN', async () => {
+        let input = {method: 'int256Not', params: {a: "57896044618658097711785492504343953926634992332820282019728792003956564819967"}};
+        let result = query(JSON.stringify(input));
+        expect(JSON.parse(result).data).to.equal("-57896044618658097711785492504343953926634992332820282019728792003956564819968");
+    });
+
+    it('int256Not: ~INT256_MIN = INT256_MAX', async () => {
+        let input = {method: 'int256Not', params: {a: "-57896044618658097711785492504343953926634992332820282019728792003956564819968"}};
+        let result = query(JSON.stringify(input));
+        expect(JSON.parse(result).data).to.equal("57896044618658097711785492504343953926634992332820282019728792003956564819967");
+    });
+
     // ── int256 LShift ─────────────────────────────────────────────────────────
 
     it('int256LShift: 1 << 8 = 256', async () => {
@@ -230,6 +276,14 @@ describe('Test contract bitwise-op', function () {
         expect(JSON.parse(result).data).to.equal("1600");
     });
 
+    // BLK-C02: 1 << 254 = 2^254, within range (check_size must accept)
+    // Note: 1 << 255 = 2^255 > INT256_MAX and throws on-chain — only testable in integration
+    it('int256LShift: 1 << 254 = 2^254 (BLK-C02 non-overflow boundary)', async () => {
+        let input = {method: 'int256LShift', params: {a: "1", b: "254"}};
+        let result = query(JSON.stringify(input));
+        expect(JSON.parse(result).data).to.equal("28948022309329048855892746252171976963317496166410141009864396001978282409984");
+    });
+
     // ── int256 RShift ─────────────────────────────────────────────────────────
 
     it('int256RShift: 256 >> 4 = 16', async () => {
@@ -248,6 +302,12 @@ describe('Test contract bitwise-op', function () {
         let input = {method: 'int256RShift', params: {a: "-16", b: "2"}};
         let result = query(JSON.stringify(input));
         expect(JSON.parse(result).data).to.equal("-4");
+    });
+
+    it('int256RShift: -1 >> 255 = -1 (max shift, arithmetic)', async () => {
+        let input = {method: 'int256RShift', params: {a: "-1", b: "255"}};
+        let result = query(JSON.stringify(input));
+        expect(JSON.parse(result).data).to.equal("-1");
     });
 
     // ── uint256 RShift ────────────────────────────────────────────────────────

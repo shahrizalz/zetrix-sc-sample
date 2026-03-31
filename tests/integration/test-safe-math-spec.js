@@ -215,4 +215,82 @@ describe('Test contract safe-math (uint64 / uint256)', function () {
                 params: { s: '115792089237316195423570985008687907853269984665640564039457584007913129639936' }
             }, TEST_CONDITION.EQUALS, false, "data");
     });
+
+    // ── missing compare case ──────────────────────────────────────────────────
+
+    it('testing uint64Compare: less than returns -1', async () => {
+        await TEST_QUERY("### uint64Compare less than",
+            contractHandler, {
+                method: 'uint64Compare',
+                params: { x: '100', y: '200' }
+            }, TEST_CONDITION.EQUALS, -1, "data");
+    });
+
+    it('testing uint256Compare: less than returns -1', async () => {
+        await TEST_QUERY("### uint256Compare less than",
+            contractHandler, {
+                method: 'uint256Compare',
+                params: { x: '1000000000000000000', y: '1000000000000000001' }
+            }, TEST_CONDITION.EQUALS, -1, "data");
+    });
+
+    // ── stoui64Check / stoui256Check edge cases (BLK-L04) ────────────────────
+
+    it('testing stoui64Check: empty string returns false', async () => {
+        await TEST_QUERY("### stoui64Check empty string",
+            contractHandler, {
+                method: 'stoui64Check',
+                params: { s: '' }
+            }, TEST_CONDITION.EQUALS, false, "data");
+    });
+
+    it('testing stoui64Check: whitespace returns false', async () => {
+        await TEST_QUERY("### stoui64Check whitespace",
+            contractHandler, {
+                method: 'stoui64Check',
+                params: { s: '   ' }
+            }, TEST_CONDITION.EQUALS, false, "data");
+    });
+
+    it('testing stoui64Check: uint64Max + 1 is out of range', async () => {
+        await TEST_QUERY("### stoui64Check uint64Max+1",
+            contractHandler, {
+                method: 'stoui64Check',
+                params: { s: '18446744073709551616' }
+            }, TEST_CONDITION.EQUALS, false, "data");
+    });
+
+    it('testing stoui256Check: empty string returns false', async () => {
+        await TEST_QUERY("### stoui256Check empty string",
+            contractHandler, {
+                method: 'stoui256Check',
+                params: { s: '' }
+            }, TEST_CONDITION.EQUALS, false, "data");
+    });
+
+    it('testing stoui256Check: whitespace returns false', async () => {
+        await TEST_QUERY("### stoui256Check whitespace",
+            contractHandler, {
+                method: 'stoui256Check',
+                params: { s: '   ' }
+            }, TEST_CONDITION.EQUALS, false, "data");
+    });
+
+    // ── SafeUintMul boundary (BLK-L03) ───────────────────────────────────────
+
+    it('testing uint64Mul: UINT64_MAX * 1 = UINT64_MAX (non-overflow boundary)', async () => {
+        await TEST_QUERY("### uint64Mul UINT64_MAX * 1",
+            contractHandler, {
+                method: 'uint64Mul',
+                params: { x: '18446744073709551615', y: '1' }
+            }, TEST_CONDITION.EQUALS, "18446744073709551615", "data");
+    });
+
+    it('testing uint64Mul: 0 * UINT64_MAX = 0 (zero multiplicand)', async () => {
+        await TEST_QUERY("### uint64Mul 0 * UINT64_MAX",
+            contractHandler, {
+                method: 'uint64Mul',
+                params: { x: '0', y: '18446744073709551615' }
+            }, TEST_CONDITION.EQUALS, "0", "data");
+    });
 });

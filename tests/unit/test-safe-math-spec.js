@@ -198,4 +198,62 @@ describe('Test contract safe-math (uint64 / uint256)', function () {
         }));
         expect(JSON.parse(result).data).to.equal(false);
     });
+
+    // ── stoui64Check / stoui256Check edge cases (BLK-L04) ────────────────────
+
+    it('stoui64Check: empty string returns false', async () => {
+        let result = query(JSON.stringify({ method: 'stoui64Check', params: { s: '' } }));
+        expect(JSON.parse(result).data).to.equal(false);
+    });
+
+    it('stoui64Check: whitespace string returns false', async () => {
+        let result = query(JSON.stringify({ method: 'stoui64Check', params: { s: '   ' } }));
+        expect(JSON.parse(result).data).to.equal(false);
+    });
+
+    it('stoui64Check: uint64Max + 1 is out of range', async () => {
+        let result = query(JSON.stringify({ method: 'stoui64Check', params: { s: '18446744073709551616' } }));
+        expect(JSON.parse(result).data).to.equal(false);
+    });
+
+    it('stoui256Check: empty string returns false', async () => {
+        let result = query(JSON.stringify({ method: 'stoui256Check', params: { s: '' } }));
+        expect(JSON.parse(result).data).to.equal(false);
+    });
+
+    it('stoui256Check: whitespace string returns false', async () => {
+        let result = query(JSON.stringify({ method: 'stoui256Check', params: { s: '   ' } }));
+        expect(JSON.parse(result).data).to.equal(false);
+    });
+
+    // ── div-by-zero throws (BLK-M03 / BLK-M05) ───────────────────────────────
+
+    it('uint64Div: division by zero throws', async () => {
+        expect(() => query(JSON.stringify({ method: 'uint64Div', params: { x: '100', y: '0' } }))).to.throw();
+    });
+
+    it('uint64Mod: modulo by zero throws', async () => {
+        expect(() => query(JSON.stringify({ method: 'uint64Mod', params: { x: '100', y: '0' } }))).to.throw();
+    });
+
+    it('uint256Div: division by zero throws (BLK-M03 / BLK-M05)', async () => {
+        expect(() => query(JSON.stringify({ method: 'uint256Div', params: { x: '100', y: '0' } }))).to.throw();
+    });
+
+    it('uint256Mod: modulo by zero throws (BLK-M05)', async () => {
+        expect(() => query(JSON.stringify({ method: 'uint256Mod', params: { x: '100', y: '0' } }))).to.throw();
+    });
+
+    // ── SafeUintMul widening boundary (BLK-L03) ───────────────────────────────
+    // UINT64_MAX = 18446744073709551615
+
+    it('uint64Mul: UINT64_MAX * 1 = UINT64_MAX (non-overflow boundary)', async () => {
+        let result = query(JSON.stringify({ method: 'uint64Mul', params: { x: '18446744073709551615', y: '1' } }));
+        expect(JSON.parse(result).data).to.equal('18446744073709551615');
+    });
+
+    it('uint64Mul: 0 * UINT64_MAX = 0 (zero multiplicand)', async () => {
+        let result = query(JSON.stringify({ method: 'uint64Mul', params: { x: '0', y: '18446744073709551615' } }));
+        expect(JSON.parse(result).data).to.equal('0');
+    });
 });

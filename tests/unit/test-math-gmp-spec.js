@@ -46,6 +46,27 @@ describe('Test contract math-gmp (native GMP built-ins)', function () {
         expect(JSON.parse(result).data).to.equal("0");
     });
 
+    it('int256Pow: 2^1 = 2 (exp=1 boundary)', async () => {
+        let result = query(JSON.stringify({method: 'pow', params: {base: "2", exp: "1"}}));
+        expect(JSON.parse(result).data).to.equal("2");
+    });
+
+    it('int256Pow: (-1)^3 = -1 (negative base, odd exp)', async () => {
+        let result = query(JSON.stringify({method: 'pow', params: {base: "-1", exp: "3"}}));
+        expect(JSON.parse(result).data).to.equal("-1");
+    });
+
+    it('int256Pow: (-2)^2 = 4 (negative base, even exp)', async () => {
+        let result = query(JSON.stringify({method: 'pow', params: {base: "-2", exp: "2"}}));
+        expect(JSON.parse(result).data).to.equal("4");
+    });
+
+    // BLK-H01: exp=10000 is exactly at the cap — must succeed when result fits
+    it('int256Pow: 1^10000 = 1 (at exp cap, BLK-H01)', async () => {
+        let result = query(JSON.stringify({method: 'pow', params: {base: "1", exp: "10000"}}));
+        expect(JSON.parse(result).data).to.equal("1");
+    });
+
     // ── int256Sqrt ────────────────────────────────────────────────────────────
 
     it('int256Sqrt: sqrt(0) = 0', async () => {
@@ -76,6 +97,16 @@ describe('Test contract math-gmp (native GMP built-ins)', function () {
     it('int256Sqrt: sqrt(2) = 1 (floor)', async () => {
         let result = query(JSON.stringify({method: 'sqrt', params: {x: "2"}}));
         expect(JSON.parse(result).data).to.equal("1");
+    });
+
+    it('int256Sqrt: sqrt(10) = 3 (non-perfect floor)', async () => {
+        let result = query(JSON.stringify({method: 'sqrt', params: {x: "10"}}));
+        expect(JSON.parse(result).data).to.equal("3");
+    });
+
+    it('int256Sqrt: sqrt(99) = 9 (non-perfect floor, 9^2=81 < 99 < 100=10^2)', async () => {
+        let result = query(JSON.stringify({method: 'sqrt', params: {x: "99"}}));
+        expect(JSON.parse(result).data).to.equal("9");
     });
 
     it('int256Sqrt: sqrt(10000000000) = 100000', async () => {

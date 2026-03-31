@@ -47,6 +47,25 @@ describe('Test contract math-gmp (native GMP built-ins)', function () {
             TEST_CONDITION.EQUALS, "0", "data");
     });
 
+    it('int256Pow: 2^1 = 2 (exp=1 boundary)', async () => {
+        await TEST_QUERY("### int256Pow 2^1",
+            contractHandler, {method: 'pow', params: {base: "2", exp: "1"}},
+            TEST_CONDITION.EQUALS, "2", "data");
+    });
+
+    it('int256Pow: (-1)^3 = -1 (negative base, odd exp)', async () => {
+        await TEST_QUERY("### int256Pow (-1)^3",
+            contractHandler, {method: 'pow', params: {base: "-1", exp: "3"}},
+            TEST_CONDITION.EQUALS, "-1", "data");
+    });
+
+    // BLK-H01: exp=10000 is exactly at the cap — must succeed when result fits
+    it('int256Pow: 1^10000 = 1 (at exp cap, BLK-H01)', async () => {
+        await TEST_QUERY("### int256Pow 1^10000",
+            contractHandler, {method: 'pow', params: {base: "1", exp: "10000"}},
+            TEST_CONDITION.EQUALS, "1", "data");
+    });
+
     // ── int256Sqrt ────────────────────────────────────────────────────────────
 
     it('int256Sqrt: sqrt(0) = 0', async () => {
@@ -77,6 +96,18 @@ describe('Test contract math-gmp (native GMP built-ins)', function () {
         await TEST_QUERY("### int256Sqrt(2) floor",
             contractHandler, {method: 'sqrt', params: {x: "2"}},
             TEST_CONDITION.EQUALS, "1", "data");
+    });
+
+    it('int256Sqrt: sqrt(10) = 3 (non-perfect floor)', async () => {
+        await TEST_QUERY("### int256Sqrt(10) non-perfect",
+            contractHandler, {method: 'sqrt', params: {x: "10"}},
+            TEST_CONDITION.EQUALS, "3", "data");
+    });
+
+    it('int256Sqrt: sqrt(99) = 9 (non-perfect floor)', async () => {
+        await TEST_QUERY("### int256Sqrt(99) non-perfect",
+            contractHandler, {method: 'sqrt', params: {x: "99"}},
+            TEST_CONDITION.EQUALS, "9", "data");
     });
 
     it('int256Sqrt: sqrt(10000000000) = 100000', async () => {

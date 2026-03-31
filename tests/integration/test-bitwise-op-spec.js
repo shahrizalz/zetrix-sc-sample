@@ -105,6 +105,23 @@ describe('Test contract bitwise-op', function () {
             }, TEST_CONDITION.EQUALS, "24", "data");
     });
 
+    // BLK-C01: unsigned-shift fix — 1 << 63 must wrap to INT64_MIN
+    it('int64LShift: 1 << 63 = INT64_MIN (BLK-C01)', async () => {
+        await TEST_QUERY("### int64LShift 1 << 63",
+            contractHandler, {
+                method: 'int64LShift',
+                params: {a: "1", b: "63"}
+            }, TEST_CONDITION.EQUALS, "-9223372036854775808", "data");
+    });
+
+    it('int64LShift: -1 << 1 = -2 (negative input)', async () => {
+        await TEST_QUERY("### int64LShift -1 << 1",
+            contractHandler, {
+                method: 'int64LShift',
+                params: {a: "-1", b: "1"}
+            }, TEST_CONDITION.EQUALS, "-2", "data");
+    });
+
     // ── int64 RShift ──────────────────────────────────────────────────────────
 
     it('int64RShift: 64 >> 3 = 8', async () => {
@@ -121,6 +138,15 @@ describe('Test contract bitwise-op', function () {
                 method: 'int64RShift',
                 params: {a: "-8", b: "1"}
             }, TEST_CONDITION.EQUALS, "-4", "data");
+    });
+
+    // BLK-M01: arithmetic shift of -1 by max shift must sign-extend to -1
+    it('int64RShift: -1 >> 63 = -1 (BLK-M01 arithmetic)', async () => {
+        await TEST_QUERY("### int64RShift -1 >> 63",
+            contractHandler, {
+                method: 'int64RShift',
+                params: {a: "-1", b: "63"}
+            }, TEST_CONDITION.EQUALS, "-1", "data");
     });
 
     // ── uint64 RShift ─────────────────────────────────────────────────────────
@@ -205,6 +231,22 @@ describe('Test contract bitwise-op', function () {
             }, TEST_CONDITION.EQUALS, "0", "data");
     });
 
+    it('int256Not: ~INT256_MAX = INT256_MIN', async () => {
+        await TEST_QUERY("### int256Not ~INT256_MAX",
+            contractHandler, {
+                method: 'int256Not',
+                params: {a: "57896044618658097711785492504343953926634992332820282019728792003956564819967"}
+            }, TEST_CONDITION.EQUALS, "-57896044618658097711785492504343953926634992332820282019728792003956564819968", "data");
+    });
+
+    it('int256Not: ~INT256_MIN = INT256_MAX', async () => {
+        await TEST_QUERY("### int256Not ~INT256_MIN",
+            contractHandler, {
+                method: 'int256Not',
+                params: {a: "-57896044618658097711785492504343953926634992332820282019728792003956564819968"}
+            }, TEST_CONDITION.EQUALS, "57896044618658097711785492504343953926634992332820282019728792003956564819967", "data");
+    });
+
     // ── int256 LShift ─────────────────────────────────────────────────────────
 
     it('int256LShift: 1 << 8 = 256', async () => {
@@ -223,6 +265,16 @@ describe('Test contract bitwise-op', function () {
             }, TEST_CONDITION.EQUALS, "1600", "data");
     });
 
+    // BLK-C02: 1 << 254 = 2^254, within int256 range (check_size must accept)
+    // 1 << 255 = 2^255 > INT256_MAX, correctly throws via BLK-C02 fix (not assertable with TEST_QUERY)
+    it('int256LShift: 1 << 254 = 2^254 (BLK-C02 non-overflow boundary)', async () => {
+        await TEST_QUERY("### int256LShift 1 << 254",
+            contractHandler, {
+                method: 'int256LShift',
+                params: {a: "1", b: "254"}
+            }, TEST_CONDITION.EQUALS, "28948022309329048855892746252171976963317496166410141009864396001978282409984", "data");
+    });
+
     // ── int256 RShift ─────────────────────────────────────────────────────────
 
     it('int256RShift: 256 >> 4 = 16', async () => {
@@ -239,6 +291,14 @@ describe('Test contract bitwise-op', function () {
                 method: 'int256RShift',
                 params: {a: "-16", b: "2"}
             }, TEST_CONDITION.EQUALS, "-4", "data");
+    });
+
+    it('int256RShift: -1 >> 255 = -1 (max shift, arithmetic)', async () => {
+        await TEST_QUERY("### int256RShift -1 >> 255",
+            contractHandler, {
+                method: 'int256RShift',
+                params: {a: "-1", b: "255"}
+            }, TEST_CONDITION.EQUALS, "-1", "data");
     });
 
     // ── uint256 RShift ────────────────────────────────────────────────────────
