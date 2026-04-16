@@ -17,7 +17,7 @@ const sourceAddress1 = "ZTX3M6pWnCXk4e6vrXu4SQQganjQJrrF8Xezx";
 const contractHandler = {
     sdk: new ZtxChainSDK({
         host: process.env.NODE_URL,
-        secure: true
+        secure: false
     }),
     contractAddress: "",
 };
@@ -73,7 +73,7 @@ describe('Test contract ztp20 permit', function () {
         const PERMIT_TYPEHASH = generateHash("Permit(owner,spender,value,deadline,p,s)");
         const data = PERMIT_TYPEHASH + sourceAddress + sourceAddress1 + value + nonce.toString() + deadline;
         const hash = generateHash(data);
-        const signedHash = await signData(sdk, privateKey, hash);
+        const signedHash = await signData(contractHandler.sdk, privateKey, hash);
 
         await TEST_INVOKE("### 1.3 Permit approve function invoked by spender",
             contractHandler, txInitiator1, {

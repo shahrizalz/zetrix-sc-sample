@@ -46,7 +46,7 @@ describe('Test contract math', function () {
             contractHandler, {
                 method: 'pow',
                 params: {base: "99", exp: "0"}
-            }, TEST_CONDITION.EQUALS, "1", "data");
+            }, TEST_CONDITION.EQUALS, 1, "data");
     });
 
     it('pow: 1^100 = 1', async () => {

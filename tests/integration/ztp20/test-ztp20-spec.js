@@ -15,7 +15,7 @@ const sourceAddress1 = "ZTX3M6pWnCXk4e6vrXu4SQQganjQJrrF8Xezx";
 const contractHandler = {
     sdk: new ZtxChainSDK({
         host: process.env.NODE_URL,
-        secure: true
+        secure: false
     }),
     contractAddress: "",
 };

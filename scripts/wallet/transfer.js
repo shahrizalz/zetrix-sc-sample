@@ -43,7 +43,7 @@ async function main() {
     const operationResult = sdk.operation.gasSendOperation({
         sourceAddress,
         destAddress: toAddress,
-        amount: amountMo,
+        gasAmount: amountMo,
     });
 
     if (operationResult.errorCode !== 0) {

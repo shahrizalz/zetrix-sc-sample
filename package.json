@@ -13,6 +13,7 @@
     "wallet:balance": "node ./scripts/wallet/balance.js",
     "wallet:transfer": "node ./scripts/wallet/transfer.js",
     "wallet:tx": "node ./scripts/wallet/tx.js",
+    "wallet:fund": "node ./scripts/wallet/fund-accounts.js",
     "deploy:ztp721": "node scripts/ztp721/deploy-ztp721.js",
     "upgrade:ztp721": "node scripts/ztp721/upgrade-ztp721.js",
     "deploy:ztp1155": "node scripts/ztp1155/deploy-ztp1155.js",
