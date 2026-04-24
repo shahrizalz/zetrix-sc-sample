@@ -14,6 +14,12 @@
     "wallet:transfer": "node ./scripts/wallet/transfer.js",
     "wallet:tx": "node ./scripts/wallet/tx.js",
     "wallet:fund": "node ./scripts/wallet/fund-accounts.js",
+    "wallet:keygen": "node ./scripts/wallet/generate-keypair.js",
+    "wallet:sign-transfer": "node ./scripts/wallet/sign-transfer.js",
+    "wallet:evaluate-fee-s1": "node ./scripts/wallet/evaluate-fee-s1.js",
+    "wallet:evaluate-fee-s2": "node ./scripts/wallet/evaluate-fee-s2.js",
+    "wallet:evaluate-fee-s3": "node ./scripts/wallet/evaluate-fee-s3.js",
+    "wallet:evaluate-fee-s4": "node ./scripts/wallet/evaluate-fee-s4.js",
     "deploy:ztp721": "node scripts/ztp721/deploy-ztp721.js",
     "upgrade:ztp721": "node scripts/ztp721/upgrade-ztp721.js",
     "deploy:ztp1155": "node scripts/ztp1155/deploy-ztp1155.js",
@@ -22,10 +28,11 @@
     "upgrade:ztp20": "node scripts/ztp20/upgrade-ztp20.js"
   },
   "dependencies": {
+    "bignumber.js": "^11.0.0",
     "dotenv": "^16.0.1",
     "js-beautify": "^1.15.1",
     "ssl-root-cas": "^1.3.1",
-    "zetrix-sdk-nodejs": "^1.0.1"
+    "zetrix-sdk-nodejs": "^1.0.3"
   },
   "devDependencies": {
     "chai": "^4.5.0",

@@ -53,12 +53,12 @@ async function main() {
 
     const operationItem = operationResult.result.operation;
 
-    // Evaluate fee
+    // Evaluate fee, build, and sign in one call
     const feeData = await sdk.transaction.evaluateFee({
         sourceAddress,
         nonce,
         operations: [operationItem],
-        signtureNumber: '1',
+        privateKeys: [privateKey],
     });
 
     if (feeData.errorCode !== 0) {
@@ -66,30 +66,13 @@ async function main() {
         process.exit(1);
     }
 
-    const feeLimit = feeData.result.feeLimit;
-    const gasPrice = feeData.result.gasPrice;
-    console.log('Fee limit :', feeLimit, 'MO');
-    console.log('Gas price :', gasPrice, 'MO');
-
-    // Build blob
-    const blobInfo = sdk.transaction.buildBlob({
-        sourceAddress,
-        gasPrice,
-        feeLimit,
-        nonce,
-        operations: [operationItem],
-    });
-
-    // Sign
-    const signed = sdk.transaction.sign({
-        privateKeys: [privateKey],
-        blob: blobInfo.result.transactionBlob,
-    });
+    console.log('Fee limit :', feeData.result.feeLimit, 'MO');
+    console.log('Gas price :', feeData.result.gasPrice, 'MO');
 
     // Submit
     const submitted = await sdk.transaction.submit({
-        signature: signed.result.signatures,
-        blob: blobInfo.result.transactionBlob,
+        signature: feeData.result.signatures,
+        blob: feeData.result.transactionBlob,
     });
 
     if (submitted.errorCode !== 0) {

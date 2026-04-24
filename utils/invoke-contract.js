@@ -53,8 +53,8 @@ async function TEST_INVOKE(msg, contractHandler, txInitiator, input, expectResul
 
     const blobInfo = sdk.transaction.buildBlob({
         sourceAddress: sourceAddress,
-        gasPrice: gasPrice,
-        feeLimit: feeLimit,
+        gasPrice: '5',
+        feeLimit: '200000',
         nonce: nonce,
         operations: [operationItem],
     });

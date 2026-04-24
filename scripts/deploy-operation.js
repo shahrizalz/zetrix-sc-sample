@@ -64,7 +64,7 @@ async function deployOperation(nodeUrl, sourceAddress, privateKey, contractName,
         sourceAddress,
         nonce,
         operations: [operationItem],
-        signtureNumber: '100',
+        privateKeys: [privateKey],
     });
 
     if (feeData.errorCode !== 0) {
@@ -73,28 +73,12 @@ async function deployOperation(nodeUrl, sourceAddress, privateKey, contractName,
         return;
     }
 
-    let feeLimit = feeData.result.feeLimit;
-    let gasPrice = feeData.result.gasPrice;
-
-    console.log("Fee limit for this contract is", feeLimit);
-    console.log("Estimated gas price is", gasPrice);
-
-    const blobInfo = sdk.transaction.buildBlob({
-        sourceAddress: sourceAddress,
-        gasPrice: gasPrice,
-        feeLimit: feeLimit,
-        nonce: nonce,
-        operations: [operationItem],
-    });
-
-    const signed = sdk.transaction.sign({
-        privateKeys: [privateKey],
-        blob: blobInfo.result.transactionBlob
-    })
+    console.log("Fee limit for this contract is", feeData.result.feeLimit);
+    console.log("Estimated gas price is", feeData.result.gasPrice);
 
     let submitted = await sdk.transaction.submit({
-        signature: signed.result.signatures,
-        blob: blobInfo.result.transactionBlob
+        signature: feeData.result.signatures,
+        blob: feeData.result.transactionBlob
     })
 
     if (submitted.errorCode !== 0) {

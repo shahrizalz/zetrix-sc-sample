@@ -56,36 +56,15 @@ async function transfer(sdk, sourceAddress, privateKey, toAddress, amountMo) {
         sourceAddress,
         nonce,
         operations: [operationItem],
-        signtureNumber: '1',
+        privateKeys: [privateKey],
     });
     if (feeData.errorCode !== 0) {
         throw new Error(`evaluateFee failed (${feeData.errorCode}): ${feeData.errorDesc}`);
     }
 
-    const { feeLimit, gasPrice } = feeData.result;
-
-    const blobInfo = sdk.transaction.buildBlob({
-        sourceAddress,
-        gasPrice,
-        feeLimit,
-        nonce,
-        operations: [operationItem],
-    });
-    if (blobInfo.errorCode !== 0) {
-        throw new Error(`buildBlob failed (${blobInfo.errorCode}): ${blobInfo.errorDesc}`);
-    }
-
-    const signed = sdk.transaction.sign({
-        privateKeys: [privateKey],
-        blob: blobInfo.result.transactionBlob,
-    });
-    if (signed.errorCode !== 0) {
-        throw new Error(`sign failed (${signed.errorCode}): ${signed.errorDesc}`);
-    }
-
     const submitted = await sdk.transaction.submit({
-        signature: signed.result.signatures,
-        blob: blobInfo.result.transactionBlob,
+        signature: feeData.result.signatures,
+        blob: feeData.result.transactionBlob,
     });
     if (submitted.errorCode !== 0) {
         throw new Error(`submit failed (${submitted.errorCode}): ${submitted.errorDesc}`);
@@ -213,7 +192,7 @@ async function main() {
     }
 
     // ── Step 5: Execute ───────────────────────────────────────────────────────
-    const sdk = new ZtxChainSDK({ host: nodeUrl, secure: false });
+    const sdk = new ZtxChainSDK({ host: nodeUrl, secure: true });
 
     console.log('');
     console.log(hr);
